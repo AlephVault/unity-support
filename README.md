@@ -1,5 +1,5 @@
 # Unity Support
-This support package contains some core types and utilities for all of the AlephVault projects.
+This package contains core types and utilities for all the AlephVault-derived projects..
 
 # Install
 To install this package you need to open the package manager in your project and:
