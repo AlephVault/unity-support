@@ -11,6 +11,9 @@ namespace AlephVault.Unity.Support
         ///     This class contains several utilities to compute
         ///     rounded integer divisions and related operations.
         ///   </para>
+        ///   <para>
+        ///     Essentially stolen from MLAPI package.
+        ///   </para>
         /// </summary>
         public static class Arithmetic
         {
