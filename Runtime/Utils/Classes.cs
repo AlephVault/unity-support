@@ -10,7 +10,7 @@ namespace AlephVault.Unity.Support
     {
         /// <summary>
         ///   This is an extension class with utility methods for types. Many different
-        ///     but class-related utility functions are defined in this class.
+        ///   but class-related utility functions are defined in this class.
         /// </summary>
         public static class Classes
         {
@@ -27,8 +27,8 @@ namespace AlephVault.Unity.Support
 
             /// <summary>
             ///   Checks whether another type is the same or is a subclass of a generic type.
-            ///     This is done by unwrapping the generic class on every possible inheritance
-            ///     step in the chain until the top of the hierarchy is reached.
+            ///   This is done by unwrapping the generic class on every possible inheritance
+            ///   step in the chain until the top of the hierarchy is reached.
             /// </summary>
             /// <param name="genericType">The class to check against - a generic one</param>
             /// <param name="derivedType">The class to check</param>
@@ -49,8 +49,8 @@ namespace AlephVault.Unity.Support
 
             /// <summary>
             ///   Enumerates all the types that are not generic and are
-            ///     defined in all the currently loaded assemblies in
-            ///     the current application domain.
+            ///   defined in all the currently loaded assemblies in
+            ///   the current application domain.
             /// </summary>
             /// <returns>An enumerator of all those types</returns>
             public static IEnumerable<Type> GetTypes()
@@ -60,7 +60,7 @@ namespace AlephVault.Unity.Support
 
             /// <summary>
             ///   Enumerates all the types that are not generic and are
-            ///     defined in the given assemblies.
+            ///   defined in the given assemblies.
             /// </summary>
             /// <returns>An enumerator of all those types</returns>
             public static IEnumerable<Type> GetTypes(params Assembly[] assemblies)
@@ -72,7 +72,7 @@ namespace AlephVault.Unity.Support
 
             /// <summary>
             ///   Enumerates all the types that are not generic and are
-            ///     defined in the given assembly.
+            ///   defined in the given assembly.
             /// </summary>
             /// <returns>An enumerator of all those types</returns>
             public static IEnumerable<Type> GetTypes(Assembly assembly)
@@ -96,6 +96,20 @@ namespace AlephVault.Unity.Support
                     }
                 }
             }
+
+            /// <summary>
+            ///   Valid for any type (not just classes), tells whether
+            ///   the type is nullable or not. Value types are not
+            ///   nullable.
+            /// </summary>
+            /// <param name="type"></param>
+            /// <returns></returns>
+            public static bool IsNullable(Type type)
+            {
+                if (!type.IsValueType) return true; // ref-type
+                return Nullable.GetUnderlyingType(type) != null;
+            }
+
         }
     }
 }
