@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 
@@ -29,7 +30,7 @@ namespace AlephVault.Unity.Support
 				}
 				else
 				{
-					throw new Exception("Overflow!");
+					throw new OverflowException("There is no available next id to retrieve");
 				}
 			}
 
