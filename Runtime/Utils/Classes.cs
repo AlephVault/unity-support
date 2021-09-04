@@ -110,6 +110,16 @@ namespace AlephVault.Unity.Support
                 return Nullable.GetUnderlyingType(type) != null;
             }
 
+            /// <summary>
+            ///   Builds a FQDN property name for a given type and property.
+            /// </summary>
+            /// <typeparam name="T">The type for which the property has to be got</typeparam>
+            /// <param name="property">The name of the property</param>
+            /// <returns>The fully qualified property name</returns>
+            public static string FullyQualifiedProperty<T>(string property)
+            {
+                return $"{typeof(T).FullName}.{property}";
+            }
         }
     }
 }
