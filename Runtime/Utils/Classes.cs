@@ -84,7 +84,7 @@ namespace AlephVault.Unity.Support
 
             private static IEnumerable<Type> CollectTypes(Type assemblyType)
             {
-                if (assemblyType.IsGenericType) yield break;
+                if (!assemblyType.IsConstructedGenericType) yield break;
 
                 yield return assemblyType;
 
