@@ -17,14 +17,20 @@ namespace AlephVault.Unity.Support
 		public class IdPool
 		{
 			private ulong last = 0;
+			private ulong max;
 			private SortedSet<ulong> disposed = new SortedSet<ulong>();
+
+			public IdPool(ulong maxValue = ulong.MaxValue)
+            {
+				max = maxValue;
+            }
 
 			/// <summary>
 			///   Gets the next available value.
 			/// </summary>
 			public ulong Next()
 			{
-				if (last < ulong.MaxValue)
+				if (last < max)
 				{
 					return ++last;
 				}
