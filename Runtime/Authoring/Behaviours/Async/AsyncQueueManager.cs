@@ -61,6 +61,34 @@ namespace AlephVault.Unity.Support
                 ///   in the queue processing. The returned result is
                 ///   another task that must be waited for. This new
                 ///   task is resolved when the function executes in
+                ///   its turn in the execution queue. This version
+                ///   of the function deals with function that return
+                ///   typed tasks.
+                /// </summary>
+                /// <param name="task">The function to queue for execution</param>
+                /// <returns>A typed task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
+                public Task<T> QueueTask<T>(Func<Task<T>> task)
+                {
+                    if (task == null || gameObject == null) return null;
+                    TaskCompletionSource<T> source = new TaskCompletionSource<T>();
+                    tasks.Enqueue(async () => {
+                        try
+                        {
+                            source.SetResult(await task());
+                        }
+                        catch (Exception e)
+                        {
+                            source.SetException(e);
+                        }
+                    });
+                    return source.Task;
+                }
+
+                /// <summary>
+                ///   Queues a task-returning function to be executed
+                ///   in the queue processing. The returned result is
+                ///   another task that must be waited for. This new
+                ///   task is resolved when the function executes in
                 ///   its turn in the execution queue.
                 /// </summary>
                 /// <param name="task">The function to queue for execution</param>
