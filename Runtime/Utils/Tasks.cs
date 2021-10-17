@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace AlephVault.Unity.Support
 {
@@ -488,6 +490,75 @@ namespace AlephVault.Unity.Support
                         catch (Exception e)
                         {
                             onError(e);
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
+            ///   Waits for a single task. It returns immediately if it is null.
+            ///   Any error is handled in an optional callback (if absent, the
+            ///   callback "diaperizes" the error).
+            /// </summary>
+            /// <param name="target">The target task to wait</param>
+            /// <param name="onError">What to do on error</param>
+            public static async Task UntilDone(Task target, Func<Exception, Task> onError = null)
+            {
+                onError = onError != null ? onError : (async (e) => {
+                    Debug.LogWarning($"UntilDone :: Error while waiting: {e.GetType().FullName} - {e.Message}");
+                });
+
+                if (target != null)
+                {
+                    try
+                    {
+                        await target;
+                    }
+                    catch(Exception e)
+                    {
+                        try
+                        {
+                            await onError(e);
+                        }
+                        catch(Exception e2)
+                        {
+                            Debug.LogError($"UntilDone :: Error while handling an exception ({e.GetType().FullName} - {e.Message}): {e2.GetType().FullName} - {e2.Message}");
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
+            ///   Waits for many tasks. It skips null tasks and, for each task,
+            ///   any error is handled in an optional callback (if absent, the
+            ///   callback "diaperizes" the error).
+            /// </summary>
+            /// <param name="target">The target tasks to wait</param>
+            /// <param name="onError">What to do on error</param>
+            public static async Task UntilAllDone(IEnumerable<Task> target, Func<Exception, Task> onError = null)
+            {
+                onError = onError != null ? onError : (async (e) => {
+                    Debug.LogWarning($"UntilAllDone :: Error while waiting: {e.GetType().FullName} - {e.Message}");
+                });
+
+                foreach(Task task in target)
+                {
+                    if (task != null)
+                    {
+                        try
+                        {
+                            await task;
+                        }
+                        catch (Exception e)
+                        {
+                            try
+                            {
+                                await onError(e);
+                            }
+                            catch (Exception e2)
+                            {
+                                Debug.LogError($"UntilAllDone :: Error while handling an exception ({e.GetType().FullName} - {e.Message}): {e2.GetType().FullName} - {e2.Message}");
+                            }
                         }
                     }
                 }
