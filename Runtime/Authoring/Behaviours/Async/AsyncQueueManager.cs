@@ -12,11 +12,10 @@ namespace AlephVault.Unity.Support
         namespace Behaviours
         {
             /// <summary>
-            ///   Maintains an asynchronous queue manager process that
-            ///   will end only when the object is destroyed and no
-            ///   further processing is left in the queue. It can add
-            ///   both normal functions and asynchronous functions to
-            ///   be waited for on each iteration.
+            ///   Maintains an asynchronous queue manager process. This
+            ///   process is triggered each time a task is queued and
+            ///   the process is not already running. Otherwise, the
+            ///   task will be queued into the already running process.
             /// </summary>
             public class AsyncQueueManager : MonoBehaviour
             {
@@ -27,32 +26,26 @@ namespace AlephVault.Unity.Support
                 // related to the main Unity thread).
                 private ConcurrentQueue<Func<Task>> tasks = new ConcurrentQueue<Func<Task>>();
 
-                // Initialzies the queue processing.
-                private void Start()
-                {
-                    PendingTasksLifeCycle();
-                }
+                /// <summary>
+                ///   The delay to start the async queue.
+                /// </summary>
+                [SerializeField]
+                private float invokeDelay = 0;
 
-                // This is the lifecycle to run all the pending tasks,
-                // all the time, until the object is destroyed (and
-                // except when the object is inactive). Due to the
-                // nature of the queued functions, no exceptions will
-                // be raised in the queue processing.
-                private async void PendingTasksLifeCycle()
+                // Tells whether it is running or not.
+                private bool running = false;
+
+                // Runs the entire queue.
+                private async void RunQueue()
                 {
-                    while (true)
+                    if (!running && gameObject != null)
                     {
-                        if (gameObject == null && tasks.IsEmpty)
+                        running = true;
+                        while (!tasks.TryDequeue(out Func<Task> task))
                         {
-                            return;
+                            await task();
                         }
-                        else
-                        {
-                            if (gameObject.activeInHierarchy) while (tasks.TryDequeue(out Func<Task> task))
-                            {
-                                await task();
-                            }
-                        }
+                        running = false;
                     }
                 }
 
@@ -81,6 +74,7 @@ namespace AlephVault.Unity.Support
                             source.SetException(e);
                         }
                     });
+                    Invoke("RunQueue", invokeDelay);
                     return source.Task;
                 }
 
@@ -108,6 +102,7 @@ namespace AlephVault.Unity.Support
                             source.SetException(e);
                         }
                     });
+                    Invoke("RunQueue", invokeDelay);
                     return source.Task;
                 }
 
