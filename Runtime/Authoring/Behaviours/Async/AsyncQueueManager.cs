@@ -62,7 +62,7 @@ namespace AlephVault.Unity.Support
                 /// <returns>A typed task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
                 public Task<T> QueueTask<T>(Func<Task<T>> task)
                 {
-                    if (task == null || gameObject == null) return null;
+                    if (task == null || !this) return null;
                     TaskCompletionSource<T> source = new TaskCompletionSource<T>();
                     tasks.Enqueue(async () => {
                         try
@@ -74,6 +74,7 @@ namespace AlephVault.Unity.Support
                             source.SetException(e);
                         }
                     });
+                    // TODO need to replace this with a
                     Invoke("RunQueue", invokeDelay);
                     return source.Task;
                 }
