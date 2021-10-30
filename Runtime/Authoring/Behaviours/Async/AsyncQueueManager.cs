@@ -89,7 +89,7 @@ namespace AlephVault.Unity.Support
                 /// <returns>A task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
                 public Task QueueTask(Func<Task> task)
                 {
-                    if (task == null || gameObject == null) return null;
+                    if (task == null || !this) return null;
                     TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
                     tasks.Enqueue(async () => {
                         try
