@@ -26,26 +26,12 @@ namespace AlephVault.Unity.Support
                 // related to the main Unity thread).
                 private ConcurrentQueue<Func<Task>> tasks = new ConcurrentQueue<Func<Task>>();
 
-                /// <summary>
-                ///   The delay to start the async queue.
-                /// </summary>
-                [SerializeField]
-                private float invokeDelay = 0;
-
-                // Tells whether it is running or not.
-                private bool running = false;
-
-                // Runs the entire queue.
-                private async void RunQueue()
+                // Runs the entire queue on each frame.
+                private async void Update()
                 {
-                    if (!running && gameObject != null)
+                    while (tasks.TryDequeue(out Func<Task> task))
                     {
-                        running = true;
-                        while (!tasks.TryDequeue(out Func<Task> task))
-                        {
-                            await task();
-                        }
-                        running = false;
+                        await task();
                     }
                 }
 
@@ -74,8 +60,6 @@ namespace AlephVault.Unity.Support
                             source.SetException(e);
                         }
                     });
-                    // TODO need to replace this with a
-                    Invoke("RunQueue", invokeDelay);
                     return source.Task;
                 }
 
@@ -103,7 +87,6 @@ namespace AlephVault.Unity.Support
                             source.SetException(e);
                         }
                     });
-                    Invoke("RunQueue", invokeDelay);
                     return source.Task;
                 }
 
