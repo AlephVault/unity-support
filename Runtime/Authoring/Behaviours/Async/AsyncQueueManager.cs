@@ -27,11 +27,27 @@ namespace AlephVault.Unity.Support
                 private ConcurrentQueue<Func<Task>> tasks = new ConcurrentQueue<Func<Task>>();
 
                 // Runs the entire queue on each frame.
-                private async void Update()
+                private void Start()
                 {
-                    while (tasks.TryDequeue(out Func<Task> task))
+                    RunQueue();
+                }
+
+                // Runs the entire queue until the object is destroyed.
+                // On each try, all the tasks will be executed. If one
+                // task is not -at least- executed, a dummy "Blink"
+                // operation will run.
+                private async void RunQueue()
+                {
+                    bool ranLoop;
+                    while (gameObject != null)
                     {
-                        await task();
+                        ranLoop = false;
+                        while (tasks.TryDequeue(out Func<Task> task))
+                        {
+                            ranLoop = true;
+                            await task();
+                        }
+                        if (!ranLoop) await Tasks.Blink();
                     }
                 }
 
