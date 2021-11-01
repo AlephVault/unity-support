@@ -39,7 +39,7 @@ namespace AlephVault.Unity.Support
                 private async void RunQueue()
                 {
                     bool ranLoop;
-                    while (gameObject != null)
+                    while (this != null && gameObject != null)
                     {
                         ranLoop = false;
                         while (tasks.TryDequeue(out Func<Task> task))
