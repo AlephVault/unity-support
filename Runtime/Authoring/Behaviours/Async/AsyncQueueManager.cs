@@ -62,7 +62,7 @@ namespace AlephVault.Unity.Support
                 /// </summary>
                 /// <param name="task">The function to queue for execution</param>
                 /// <returns>A typed task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
-                public Task<T> QueueTask<T>(Func<Task<T>> task)
+                public Task<T> Queue<T>(Func<Task<T>> task)
                 {
                     if (task == null || !this) return null;
                     TaskCompletionSource<T> source = new TaskCompletionSource<T>();
@@ -88,7 +88,7 @@ namespace AlephVault.Unity.Support
                 /// </summary>
                 /// <param name="task">The function to queue for execution</param>
                 /// <returns>A task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
-                public Task QueueTask(Func<Task> task)
+                public Task Queue(Func<Task> task)
                 {
                     if (task == null || !this) return null;
                     TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
@@ -115,7 +115,7 @@ namespace AlephVault.Unity.Support
                 /// </summary>
                 /// <param name="action">The function to queue for execution</param>
                 /// <returns>A task to be waited for, or null if either the function is null or the current object is destroyed</returns>
-                public Task QueueAction(Action action)
+                public Task Queue(Action action)
                 {
                     Func<Task> task = null;
                     if (action != null)
@@ -126,7 +126,7 @@ namespace AlephVault.Unity.Support
                             return Task.CompletedTask;
                         };
                     }
-                    return QueueTask(task);
+                    return Queue(task);
                 }
             }
         }
