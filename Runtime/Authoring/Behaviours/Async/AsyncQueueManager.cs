@@ -73,6 +73,7 @@ namespace AlephVault.Unity.Support
                         }
                         catch (Exception e)
                         {
+                            Debug.LogException(e);
                             source.SetException(e);
                         }
                     });
@@ -100,6 +101,7 @@ namespace AlephVault.Unity.Support
                         }
                         catch (Exception e)
                         {
+                            Debug.LogException(e);
                             source.SetException(e);
                         }
                     });
@@ -120,10 +122,9 @@ namespace AlephVault.Unity.Support
                     Func<Task> task = null;
                     if (action != null)
                     {
-                        task = () =>
+                        task = async () =>
                         {
                             action();
-                            return Task.CompletedTask;
                         };
                     }
                     return Queue(task);
