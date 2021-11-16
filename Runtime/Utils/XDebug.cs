@@ -23,12 +23,23 @@ namespace AlephVault.Unity.Support
             // The current call.
             private string currentCall;
 
+            // Whether to actually send messages, or supress them.
+            private bool sendMessages;
+
+            public XDebug(string packagePrefix, object target, string currentCall, bool sendMessages = true)
+            {
+                this.packagePrefix = packagePrefix;
+                this.target = target;
+                this.currentCall = currentCall;
+                this.sendMessages = sendMessages;
+            }
+
             /// <summary>
             ///   Logs a debug info start message.
             /// </summary>
             public void Start()
             {
-                Debug.Log($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::Begin");
+                if (sendMessages) Debug.Log($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::Begin");
             }
 
             /// <summary>
@@ -36,7 +47,7 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public void End()
             {
-                Debug.Log($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::End");
+                if (sendMessages) Debug.Log($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::End");
             }
 
             /// <summary>
@@ -44,7 +55,7 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public void Info(string message)
             {
-                Debug.Log($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::>>> {message}");
+                if (sendMessages) Debug.Log($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::>>> {message}");
             }
 
             /// <summary>
@@ -52,7 +63,7 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public void Warning(string message)
             {
-                Debug.LogWarning($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::>>> {message}");
+                if (sendMessages) Debug.LogWarning($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::>>> {message}");
             }
 
             /// <summary>
@@ -60,7 +71,7 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public void Error(string message)
             {
-                Debug.LogError($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::>>> {message}");
+                if (sendMessages) Debug.LogError($"{packagePrefix}.{target?.GetType()?.Name ?? "null"}::{currentCall}::>>> {message}");
             }
 
             /// <summary>
@@ -68,7 +79,7 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public void Exception(Exception e)
             {
-                Debug.LogException(e);
+                if (sendMessages) Debug.LogException(e);
                 Error("An exception has been triggered");
             }
         }
