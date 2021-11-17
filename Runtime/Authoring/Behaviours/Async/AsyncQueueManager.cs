@@ -19,12 +19,18 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public class AsyncQueueManager : MonoBehaviour
             {
+                // Whether to debug or not using XDebug.
+                private bool debug = false;
+
                 // This is the list of complex tasks that are pending
                 // to be executed. These tasks wrap complex things that
                 // must be waited for someone else, instead of using
                 // a mutex for it (those are things not necessarily
                 // related to the main Unity thread).
                 private ConcurrentQueue<Func<Task>> tasks = new ConcurrentQueue<Func<Task>>();
+
+                // A tracking number, only for debugging purposes.
+                private static ulong taskId = 0;
 
                 // Runs the entire queue on each frame.
                 private void Start()
@@ -64,19 +70,39 @@ namespace AlephVault.Unity.Support
                 /// <returns>A typed task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
                 public Task<T> Queue<T>(Func<Task<T>> task)
                 {
-                    if (task == null || !this) return null;
+                    // Generate a new ID for debugging.
+                    ulong id = taskId++;
+                    XDebug debugger = new XDebug("Support", this, $"Queue<{typeof(T).FullName}>(() => Task #{id})", debug);
+                    debugger.Start();
+
+                    // Remember: It is FORBIDDEN to check for gameObject property.
+                    if (task == null || !this) {
+                        debugger.Info($"Returning a finished task for (null task?, this, gameObject) = ({task == null}, {this}, {gameObject})");
+                        debugger.End();
+                        return Task<T>.FromResult(default(T));
+                    }
+
                     TaskCompletionSource<T> source = new TaskCompletionSource<T>();
+                    debugger.Info($"Queuing task ${id}");
                     tasks.Enqueue(async () => {
+                        XDebug debugger2 = new XDebug("Support", this, $"Queue<{typeof(T).FullName}>(() => Task #{id})::Body", debug);
+                        debugger2.Start();
                         try
                         {
                             source.SetResult(await task());
                         }
                         catch (Exception e)
                         {
-                            Debug.LogException(e);
+                            debugger2.Exception(e);
                             source.SetException(e);
                         }
+                        finally
+                        {
+                            debugger2.End();
+                        }
                     });
+
+                    debugger.End();
                     return source.Task;
                 }
 
@@ -91,9 +117,23 @@ namespace AlephVault.Unity.Support
                 /// <returns>A task to be waited for, or null if either the task function is null or the current object is destroyed</returns>
                 public Task Queue(Func<Task> task)
                 {
-                    if (task == null || !this) return null;
+                    // Generate a new ID for debugging.
+                    ulong id = taskId++;
+                    XDebug debugger = new XDebug("Support", this, $"Queue(() => Task #{id})", debug);
+                    debugger.Start();
+
+                    // Remember: It is FORBIDDEN to check for gameObject property.
+                    if (task == null || !this) {
+                        debugger.Info($"Returning a finished task for (null task?, this, gameObject) = ({task == null}, {this}, {gameObject})");
+                        debugger.End();
+                        return Task.CompletedTask;
+                    }
+
                     TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
+                    debugger.Info($"Queuing task ${id}");
                     tasks.Enqueue(async () => {
+                        XDebug debugger2 = new XDebug("Support", this, $"Queue(() => Task #{id})::Body", debug);
+                        debugger2.Start();
                         try
                         {
                             await task();
@@ -101,10 +141,16 @@ namespace AlephVault.Unity.Support
                         }
                         catch (Exception e)
                         {
-                            Debug.LogException(e);
+                            debugger2.Exception(e);
                             source.SetException(e);
                         }
+                        finally
+                        {
+                            debugger2.End();
+                        }
                     });
+
+                    debugger.End();
                     return source.Task;
                 }
 
