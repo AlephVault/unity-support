@@ -44,16 +44,25 @@ namespace AlephVault.Unity.Support
                 // operation will run.
                 private async void RunQueue()
                 {
+                    XDebug debugger = new XDebug("Support", this, $"RunQueue()", debug);
+                    debugger.Start();
                     bool ranLoop;
-                    while (this != null && gameObject != null)
+                    try
                     {
-                        ranLoop = false;
-                        while (tasks.TryDequeue(out Func<Task> task))
+                        while (this != null && gameObject != null)
                         {
-                            ranLoop = true;
-                            await task();
+                            ranLoop = false;
+                            while (tasks.TryDequeue(out Func<Task> task))
+                            {
+                                ranLoop = true;
+                                await task();
+                            }
+                            if (!ranLoop) await Tasks.Blink();
                         }
-                        if (!ranLoop) await Tasks.Blink();
+                    }
+                    finally
+                    {
+                        debugger.End();
                     }
                 }
 
@@ -79,7 +88,7 @@ namespace AlephVault.Unity.Support
                     if (task == null || !this) {
                         debugger.Info($"Returning a finished task for (null task?, this, gameObject) = ({task == null}, {this}, {gameObject})");
                         debugger.End();
-                        return Task<T>.FromResult(default(T));
+                        return Task.FromResult(default(T));
                     }
 
                     TaskCompletionSource<T> source = new TaskCompletionSource<T>();
