@@ -50,7 +50,7 @@ namespace AlephVault.Unity.Support
                     while (currentTime < Lapse)
                     {
                         await Utils.Tasks.Blink();
-                        currentTime += Time.deltaTime;
+                        currentTime += Time.unscaledDeltaTime;
                     }
                     Locked = false;
                 }
