@@ -25,17 +25,11 @@ namespace AlephVault.Unity.Support
                 ///       This value is expressed in seconds.
                 ///   ]]>
                 /// </summary>
-                [SerializeField]
-                private float lapse = 1f;
-
-                /// <summary>
-                ///   See <see cref="lapse"/>. This is just a public getter for that property.
-                /// </summary>
-                public float Lapse { get { return lapse; } }
+                public float Lapse;
 
                 void Awake()
                 {
-                    if (lapse <= 0) lapse = 1f;
+                    if (Lapse <= 0) Lapse = 1f;
                 }
 
                 /// <summary>
