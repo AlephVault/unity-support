@@ -12,6 +12,15 @@ namespace AlephVault.Unity.Support
         /// </summary>
         public static class Tasks
         {
+            /// <summary>
+            ///   A default function to handle an incoming exception.
+            /// </summary>
+            /// <param name="e">The exception to handle</param>
+            public static async Task DefaultOnError(Exception e)
+            {
+                Debug.LogException(e);
+            }
+            
             public static async Task Blink()
             {
                 await Task.Yield();
