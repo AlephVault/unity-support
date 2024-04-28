@@ -138,7 +138,7 @@ namespace AlephVault.Unity.Support
                     }
 
                     TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
-                    debugger.Info($"Queuing task ${id}");
+                    debugger.Info($"Queuing task #{id}");
                     tasks.Enqueue(async () => {
                         XDebug debugger2 = new XDebug("Support", this, $"Queue(() => Task #{id})::Body", debug);
                         debugger2.Start();
