@@ -20,7 +20,7 @@ namespace AlephVault.Unity.Support
             public class AsyncQueueManager : MonoBehaviour
             {
                 // Whether to debug or not using XDebug.
-                private bool debug = false;
+                private bool debug = true;
 
                 // This is the list of complex tasks that are pending
                 // to be executed. These tasks wrap complex things that
@@ -92,7 +92,7 @@ namespace AlephVault.Unity.Support
                     }
 
                     TaskCompletionSource<T> source = new TaskCompletionSource<T>();
-                    debugger.Info($"Queuing task ${id}");
+                    debugger.Info($"Queuing task #{id}");
                     tasks.Enqueue(async () => {
                         XDebug debugger2 = new XDebug("Support", this, $"Queue<{typeof(T).FullName}>(() => Task #{id})::Body", debug);
                         debugger2.Start();
