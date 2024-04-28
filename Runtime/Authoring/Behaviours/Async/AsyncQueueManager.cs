@@ -20,7 +20,7 @@ namespace AlephVault.Unity.Support
             public class AsyncQueueManager : MonoBehaviour
             {
                 // Whether to debug or not using XDebug.
-                private bool debug = true;
+                private bool debug = false;
 
                 // This is the list of complex tasks that are pending
                 // to be executed. These tasks wrap complex things that
