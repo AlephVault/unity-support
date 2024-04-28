@@ -79,8 +79,11 @@ namespace AlephVault.Unity.Support
             /// </summary>
             public void Exception(Exception e)
             {
-                if (sendMessages) Debug.LogException(e);
-                Error("An exception has been triggered");
+                if (sendMessages)
+                {
+                    Debug.LogException(e);
+                    Error("An exception has been triggered");
+                }
             }
         }
     }
