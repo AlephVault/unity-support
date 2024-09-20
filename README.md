@@ -199,3 +199,15 @@ It's a static class providing some methods:
 - `public static T Clamp<T>(T? min, T value, T? max)`: Enforces a value to be between some given boundaries. Null boundaries are ignored, but otherwise the input value is modified to be not less than `min` and not greater than `max`.
 - `public static bool In<T>(T? min, T value, T? max)`: Similar but only checks whether the value is in range, instead of modifying it.
 - `public static Dictionary<K, V> Merge<K, V>(Dictionary<K, V> left, Dictionary<K, V> right, inPlace = true, (k, vLeft, vRight) => vLeft)`: Merges two dictionaries. If `inPlace` is true, then the first dictionary is affected in-place and also returned as value. Otherwise, then a new merged dictionary instance is generated. The fourth parameter is an OPTIONAL callback that resolves a new value when the two dictionaries have values on the same key. By default, when not specified, the criterion is to pick the value from the RIGHT/second dictionary, overriding what was specified in the LEFT/first dictionary.
+
+Examples:
+
+```
+uint clamped = AlephVault.Unity.Support.Values.Clamp(1, 8, 7); // It will become 7.
+bool isIn = AlephVault.Unity.Support.Values.In(1, 8, 7); // It will be false.
+Dictionary<int, string> merged = AlephVault.Unity.Support.Values.Merge<int, string>(
+    new Dictionary<int, string> {{1, "Foo"}, {2, "Bar"}},
+    new Dictionary<int, string> {{1, "Foo2"}, {3, "Baz"}},
+    false
+); // It will return a dictionary like 1=>Foo2, 2=>Bar, 3=>Baz
+```
