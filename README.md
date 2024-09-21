@@ -18,7 +18,7 @@ This section describes the features offered by this Support package.
 
 All these classes are accessible at namespace: `AlephVault.Unity.Support.Authoring.Behaviours`.
 
-### MonoBehaviourExtensions
+### `MonoBehaviourExtensions`
 
 These are extensions to the `MonoBehaviour` class. Its purpose is to add some utilities to the `MonoBehaviour class`.
 
@@ -26,11 +26,11 @@ It adds the following members:
 
 - `public void Invoke(() => DoSomething(...), someDelay)`: Invokes a given parameterless function after a given delay, expressed in float seconds. If `someDelay` is non-negative, invokes the target function (passed as first parameter) as a coroutine after the specified `someDelay` seconds. Otherwise, if negative, invokes it synchronously / immediately.
 
-### Normalized
+### `Normalized`
 
 This is a behaviour that can be attached to any object. On `Awake()`, it forces the object's local position to (0, 0, 0), its rotation to the identity, and its scale to (1, 1, 1).
 
-### Throttler
+### `Throttler`
 
 This is a behaviour that can be attached to any object. Its purpose is to allow throttled actions (i.e. actions that cannot be invoked THAT quickly but instead with a certain minimum interval or lapse before they can be allowed to be called). This may prevent malicius behaviours, mostly in multiplayer online games, for the game to not be saturated with a lot of requests.
 
@@ -39,7 +39,7 @@ This behaviour must first be configured for the object it's attached to. The pro
 - `public float Lapse`: Expressed in seconds, tells the minimum amount of time to wait, after invoking a throttled call, before being allowed to invoke another throttled call. This must be setup to a positive number (negative numbers or zero will cause an immediate allowance, rendering thr throttler useless).
 - `public Throttled(() => DoSomething(...))`: Invokes a given parameterless action under the throttle mechanism. This means that if this call was being done before the required `Lapse` time passed after a previous call, this call will do nothing. Otherwise, the passed action will be invoked synchronously.
 
-### AsyncQueueManager
+### `AsyncQueueManager`
 
 This is a behaviour that can be attached to any object. Its purpose is to provide a way to invoke and wait asynchronous code that is intended under these conditions:
 
@@ -60,11 +60,11 @@ These are non-Object types or extensions with many purposes.
 
 All these classes are accessible at namespace: `AlephVault.Unity.Support.Types`.
 
-### Async.AsyncOperationExtensionMethods
+### `Async.AsyncOperationExtensionMethods`
 
 These are extension to the `AsyncOperation` class. They make the `AsyncOperation` awaitable objects.
 
-### Sampling.RandomBox3
+### `Sampling.RandomBox3`
 
 This is a class that takes two vectors serving as bounding box and then generates random vectors inside that bounding box. Examples:
 
@@ -75,11 +75,11 @@ Vector3 randomVector = box.Get();
 // randomVector will be with x in [10..30], y in [15..40] and z in [0..20].
 ```
 
-### Exception
+### `Exception`
 
 This is just a base Exception class.
 
-### IdPool
+### `IdPool`
 
 An IdPool is a way to retrieve unique `ulong` numbers each time. It's used in some classes to maintain connection ids or any source of cheap transient resource ids. This class is meant only for runtime purposes and never for persistent storage functions.
 
@@ -119,7 +119,7 @@ It's up to you to ensure that the disposed numbers are not used in your logic. A
 
 All these classes are located at namespace: `AlephVault.Unity.Support.Utils`.
 
-### Arithmetic
+### `Arithmetic`
 
 It's a helper to deal with certain arithmetic functions.
 
@@ -137,7 +137,7 @@ long value = 400000; // An arbitrary number
 long size = AlephVault.Unity.Support.Utils.Arithmetic.VarIntSize(value); // Obtains the bytes size of a number. It uses a special encoding for packing the number.
 ```
 
-### Classes
+### `Classes`
 
 This is a helper class to deal with... classes.
 
@@ -160,7 +160,7 @@ IEnumerable<Type> types = AlephVault.Unity.Support.Utils.Classes.GetTypes();
 ...
 ```
 
-### Tasks
+### `Tasks`
 
 This is a helper class to deal with asynchronous calls.
 
@@ -188,7 +188,7 @@ It also provides extension methods to `Func<..., Task>` methods, ranging from `F
 - `Func<int, string, Task> fnNoArgs = async (x) => ...; Task task = fnNoArgs.InvokeAsync(1, "hello", async (e) => ...handle error...)`: Invokes an async function with an argument `1` and an argument `"hello"` and waits for it to finish. A last argument being an async handler of an exception is OPTIONAL so it can be run if an exception is triggered to catch it.
 - ... and there are copies of InvokeAsync extending functions of UP TO 16 ARGUMENTS.
 
-### Values
+### `Values`
 
 This is a helper class to deal with certain types of values.
 
