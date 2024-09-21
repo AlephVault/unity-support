@@ -24,7 +24,7 @@ These are extensions to the `MonoBehaviour` class. Its purpose is to add some ut
 
 It adds the following members:
 
-- `public Invoke(() => DoSomething(...), someDelay)`: Invokes a given parameterless function after a given delay, expressed in float seconds. If `someDelay` is non-negative, invokes the target function (passed as first parameter) as a coroutine after the specified `someDelay` seconds. Otherwise, if negative, invokes it synchronously / immediately.
+- `public void Invoke(() => DoSomething(...), someDelay)`: Invokes a given parameterless function after a given delay, expressed in float seconds. If `someDelay` is non-negative, invokes the target function (passed as first parameter) as a coroutine after the specified `someDelay` seconds. Otherwise, if negative, invokes it synchronously / immediately.
 
 ### Normalized
 
