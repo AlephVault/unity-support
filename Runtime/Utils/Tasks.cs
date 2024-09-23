@@ -21,10 +21,53 @@ namespace AlephVault.Unity.Support
                 Debug.LogException(e);
             }
             
+            /**
+             * Returns a task that yields one frame or perhaps
+             * synchronization tick.
+             */
             public static async Task Blink()
             {
                 await Task.Yield();
-                // Task.Delay(TimeSpan.FromMilliseconds(1));
+            }
+
+            /**
+             * Returns a task that will resolve when a condition
+             * is properly reached.
+             */
+            public static async Task WaitUntil(Func<bool> predicate)
+            {
+                while (!predicate())
+                {
+                    await Blink();
+                }
+            }
+
+            /**
+             * Returns a task that will resolve when a specific
+             * perhaps-scaled time elapses.
+             */
+            public static async Task WaitForSeconds(float seconds)
+            {
+                float time = 0;
+                while (time < seconds)
+                {
+                    await Blink();
+                    time += Time.deltaTime;
+                }
+            }
+
+            /**
+             * Returns a task that will resolve when a specific
+             * unscaled time elapses.
+             */
+            public static async Task WaitForSecondsRealtime(float seconds)
+            {
+                float time = 0;
+                while (time < seconds)
+                {
+                    await Blink();
+                    time += Time.unscaledDeltaTime;
+                }
             }
 
             /// <summary>
