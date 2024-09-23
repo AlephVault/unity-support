@@ -183,6 +183,28 @@ namespace AlephVault.Unity.Support
                     }
                     return Queue(task);
                 }
+
+                /// <summary>
+                ///   Queues a standard function to be executed in the
+                ///   queue processing. The returned result is a task
+                ///   that must be waited for. This task is resolved
+                ///   when the function executes in its turn in the
+                ///   execution queue.
+                /// </summary>
+                /// <param name="action">The function to queue for execution</param>
+                /// <returns>A task to be waited for, or null if either the function is null or the current object is destroyed</returns>
+                public Task<T> Queue<T>(Func<T> action)
+                {
+                    Func<Task<T>> task = null;
+                    if (action != null)
+                    {
+                        task = async () =>
+                        {
+                            return action();
+                        };
+                    }
+                    return Queue(task);
+                }
             }
         }
     }
