@@ -52,7 +52,9 @@ It offers these methods (remember: you will typically invoke them in your asynch
 
 - `public Task Queue(() => DoSomething(...))`: Queues a regular callback. Returns a task that resolves when the callback finishes (exceptions are forwarded).
 - `public Task Queue(async () => DoSomething(...))`: Queues an async callback (a task-returning method). Returns a task that resolves when the callback finishes (exceptions are forwarded).
-- `public Task<T> Queue<T>(async () => { DoSomething(...); return ...;})`: Same idea but this callback can return a value (the return value is also forwarded).
+- `public Task<T> Queue<T>(() => { DoSomething(...); return ...; })`: Same idea (for non-async) but this callback can return a value (the return value is also forwarded).
+- `public Task<T> Queue<T>(async () => { DoSomething(...); return ...; })`: Same idea (for async) but this callback can return a value (the return value is also forwarded).
+- `public bool CurrentThreadIsMain`: Tells whether the current thread is the main one. If the object did not awake yet, this method will raise an `InvalidOperatorException`.
 
 ## Type classes
 
@@ -85,7 +87,7 @@ An IdPool is a way to retrieve unique `ulong` numbers each time. It's used in so
 
 The object can be created in two ways:
 
-```
+```csharp
 // A pool with limit of 2^64 - 1.
 var pool = new AlephVault.Unity.Support.Types.IdPool();
 
@@ -100,7 +102,7 @@ Once there, you can use one of those objects (e.g. `pool`) like this:
 
 Examples:
 
-```
+```csharp
 var a = pool.Next(); // a == 1
 var b = pool.Next(); // b == 2
 var c = pool.Next(); // c == 3.
@@ -108,7 +110,7 @@ var c = pool.Next(); // c == 3.
 
 You can also DISPOSE the ids. The disposed ids will be remembered and managed efficiently so they're forgotten when they're the greatest disposed values. The idea behind disposing a value is to tell "hey, this ID is not valid anymore. I'm returning it back to you". Depending on the disposed value, it may linger a long time among the disposed values or perhaps be forgotten and then generated in the next call to `Next()`. To dispose a value just call:
 
-```
+```csharp
 pool.Dispose(b); // 2 will be disposed.
 pool.Dispose(c); // 3 will be disposed. Following this example, since 3 was the last generated id, will be immediately forgotten and will be available in the next call. Also, since 2 is now the last generated (non-forgotten) id and now disposed, 2 will also be forgotten and the last remembered id will be 1 (which is NOT disposed, in this example).
 ```
@@ -125,7 +127,7 @@ It's a helper to deal with certain arithmetic functions.
 
 It's a static class providing some methods:
 
-```
+```csharp
 long value = 0x1234567; // An arbitrary number.
 ulong encoded = AlephVault.Unity.Support.Utils.Arithmetic.ZigZagEncode(value); // Encodes using ZigZag a ulong value. The sign bit is moved to position [0] and the rest of the number is displaced.
 long decoded = AlephVault.Unity.Support.Utils.Arithmetic.ZigZagEncode(encoded); // Does the inverse process.
@@ -146,11 +148,11 @@ It's a static class providing some methods:
 - `public static bool IsSameOrSubclassOf(Type foo, Type bar)`: Tells whether type `foo` refers also type `bar`, or is a descendant of.
 - `pubiic static bool IsSubclassOfRawGeneric(Type foo, Type bar)`: Tells whether type `foo` reders also type `bar`, or is a descendant of, or is a descendant of an application of a generic class (and this can be chained to many levels of checks of generics).
 - `public static IEnumerable<Type> GetTypes()`: Gets all the types defined in the game.
-- `public static IEnumerable<Type> GetTypes(param Assembly[] assemblies): Gets all the types defined in certain assembles in the game.
+- `public static IEnumerable<Type> GetTypes(param Assembly[] assemblies)`: Gets all the types defined in certain assembles in the game.
 - `public static bool IsNullable(Type foo)`: Tells whether `foo` is a nullable type.
 - `public static string FullyQualifiedProperty<T>(string property)`: Gets the full property name of a given property of class `T`, like `"Namespace.Of.My.Class.myProperty"`.
 
-```
+```csharp
 // Examples that check inheritance:
 bool result = AlephVault.Unity.Support.Utils.Classes.IsSameOrSubclassOf(typeof(Foo), typeof(Bar)); // true iif foo is Bar or a descendant of Bar.
 bool result = AlephVault.Unity.Support.Utils.Classes.IsSubclassOfRawGeneric(typeof(Foo), typeof(List<>)); // true iif foo is a subclass of a List<T>.
@@ -202,7 +204,7 @@ It's a static class providing some methods:
 
 Examples:
 
-```
+```csharp
 uint clamped = AlephVault.Unity.Support.Values.Clamp(1, 8, 7); // It will become 7.
 bool isIn = AlephVault.Unity.Support.Values.In(1, 8, 7); // It will be false.
 Dictionary<int, string> merged = AlephVault.Unity.Support.Values.Merge<int, string>(

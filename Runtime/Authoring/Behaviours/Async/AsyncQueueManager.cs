@@ -1,6 +1,7 @@
 using AlephVault.Unity.Support.Utils;
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -31,6 +32,23 @@ namespace AlephVault.Unity.Support
 
                 // A tracking number, only for debugging purposes.
                 private static ulong taskId = 0;
+                
+                // Tracks the current thread.
+                private Thread mainThread = null;
+                
+                /// <summary>
+                ///   Tells whether the current thread is the main one
+                ///   or not. Raises an error if the object was not yet
+                ///   awaken.
+                /// </summary>
+                public bool CurrentThreadIsMain => mainThread?.Equals(Thread.CurrentThread) ?? throw new InvalidOperationException(
+                    "This AsyncQueueManager has not been initialized."
+                );
+
+                private void Awake()
+                {
+                    mainThread = Thread.CurrentThread;
+                }
 
                 // Runs the entire queue on each frame.
                 private void Start()
