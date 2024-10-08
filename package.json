@@ -1,6 +1,6 @@
 {
   "name": "com.alephvault.unity.support",
-  "version": "0.0.4",
+  "version": "0.0.3",
   "displayName": "Aleph Vault - Unity - Support",
   "description": "Core types and utilities for all the AlephVault-derived projects.",
   "unity": "2018.1",
