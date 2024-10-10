@@ -7,7 +7,7 @@ This package contains core types and utilities for all the AlephVault-derived pr
 This package is not available in any UPM server. You must install it in your project like this:
 
 1. In Unity, with your project open, open the Package Manager.
-2. Either refer this Github project: https://github.com/AlephVault/unity-support.git or clone it locally and refer it from disk.
+2. Either refer this GitHub project: https://github.com/AlephVault/unity-support.git or clone it locally and refer it from disk.
 3. No more dependencies are required for this project.
 
 # Usage
